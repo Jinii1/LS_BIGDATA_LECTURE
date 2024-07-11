@@ -178,7 +178,8 @@ import pydataset
 pydataset.data() # ()로 함수라는 걸 알 수 있음, 입력값이 아니라 어떤 데이터가 있는지
 
 df=pydataset.data('AirPassengers') #데이터의 목록을 반환하는 행동을 함 이름을 넣을 땐 실제로 불러와서 반환
-df
+dfv
+
 
 import pandas as pd
 
@@ -186,3 +187,5 @@ import pandas as pd
 import numpy as np
 print(np.__version__)
 print(pd.__version__)
+
+# 테스트

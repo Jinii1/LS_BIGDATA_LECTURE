@@ -34,3 +34,29 @@ mpg['total'] = (mpg['cty'] + mpg['hwy']) / 2
 mpg.head()
 sum(mpg['total']) / len(mpg)
 mpg['total'].mean()
+
+import pandas as pd
+exam = pd.read_csv('C:/Users/USER/Documents/LS빅데이터스쿨/lsbigdata-project1/data/exam.csv')
+exam.head()
+exam.head(10)
+exam.tail()
+exam.shape
+exam.info()
+exam.describe()
+
+mpg = pd.read_csv('C:/Users/USER/Downloads/mpg.csv')
+mpg.head()
+mpg.tail()
+mpg.shape
+mpg.info()
+mpg.describe()
+
+df = pd.DataFrame({'x': [1, 2, 3]})
+df.head()
+df.info()
+
+
+
+
+
+

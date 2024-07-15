@@ -1,0 +1,125 @@
+---
+title: "LS 빅데이터 스쿨 3일차"
+author: "Jinii"
+format: html
+jupyter: python3
+editor_options: 
+  chunk_output_type: console
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\
+
+## 파이썬 코드 청크
+
+파이썬 코드 청크는 다음과 같은 단축키를 통해서 넣을 수 있음
+
+-   단축기: Ctrl + Alt + I
+
+## 코드 청크 종류
+
+2가지 종류가 있음
+
+1.  인라인 코드청크 : 백틱(\`)을 하나로 묶음
+2.  디스플레이 코드청크: 백틱 세 개(\`\`\`)로 묶음
+3.  모두 1번으로 표시해도 자동으로 3번 표시됨
+
+## 실행가능한 코드청크
+
+백틱 뒤에 '{python}' 을 붙여주면 됨
+
+```{python}
+1 + 1
+```
+
+## 코드 청크 실행 옵션
+
+옵션은 `#|` 시작함
+
+-   `echo` 옵션: 코드를 문서에 보여줌
+-   `eval` 옵션: 코드를 돌릴 것인가 그냥 둘 것인가를 결정
+
+```{python}
+#| echo: true
+#| eval: true
+1+1
+```
+
+## 각주
+
+이것은 간단한 각주[^1]입니다.
+
+[^1]: 이것은 참조된 텍스트입니다.
+
+## 취소선, 굵게, 이택릭
+
+**굵게**는 별표 두개로 감싸기 *기울기*는 별표 하나로 감싸기 ~~취소~~는 물결 두개로 감싸기
+
+## 체크박스
+
+## 해야 할 일들
+
+-   [ ] 화분 물 주기
+-   [x] 밀린 일기 작성
+
+## 링크 넣는 법
+
+[Jinii1's github](https://github.com/Jinii1/lsbigdata-project1.git)
+
+## 이미지 넣는 법
+
+![LS빅데이터스쿨3기모집](https://i0.wp.com/inthiswork.com/wp-content/uploads/2024/05/12345-3.png?fit=960%2C640&ssl=1)
+![사진이름](./img/이미지주소)
+
+## 수식 입력 방법
+
+* 인라인 수식: $ 하나로 감싸준다 (본문에 입력)
+* 디스플레이 수식: $ 두개로 감싸준다 (본문과는 별개, 독립적인 문단)
+
+문장안에 숫자 $5^2$를 넣어보자
+
+여러 숫자들을 따로 떼어 표시하자
+
+$$
+\sqrt{2}^{3}_{1}
+$$
+
+
+
+
+You can add options to executable code like this
+
+```         
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+# Project1
+
+*This **Project** is ...*\
+\
+
+1.  항목 1\
+2.  항목 2\
+3.  항목 3\
+
+-   항목 1
+-   항목 2
+-   항목 3
+
+\[Jinni1's github\] (https://github.com/Jinii1/lsbigdata-project1.git)
+
+## Project2
+
+\~\~ *This project has been canceled* \~\~
+
+Ctrl+Shift+K: Render : 한 줄 띄우기 \`\`\`
+
+> Anyone can learn anything with a proper education.  - Issac Lee, 2023

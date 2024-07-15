@@ -18,3 +18,19 @@ mpg
 mpg_new = mpg.copy()
 mpg_new = mpg_new.rename(columns = {'cty' : 'city', 'hwy' : 'highway'})
 mpg_new.head()
+
+import pandas as pd
+df = pd.DataFrame({'var1': [4, 3, 8],
+'var2': [2, 6, 1]})
+df
+df['var_sum'] = df['var1'] + df['var2']
+df
+df['var_mean'] = df['var_sum'] / 2
+df
+
+import pandas as pd
+mpg = pd.read_csv('C:/Users/USER/Downloads/mpg.csv')
+mpg['total'] = (mpg['cty'] + mpg['hwy']) / 2
+mpg.head()
+sum(mpg['total']) / len(mpg)
+mpg['total'].mean()

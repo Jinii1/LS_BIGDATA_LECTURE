@@ -3,7 +3,9 @@ import numpy as pd
 # 벡터 슬라이싱 예제, a를 랜덤하게 채움
 np.random.seed(42)
 a = np.random.randint(1, 21, 10)
+a = np.random.choice(np.arange(1, 4), 100, True, np.array([2/5, 2/5, 1/5])) # 중복 안 되게 추출
 print(a)
+sum(a == 3)
 
 # 두 번째 값 추출
 print(a[1])

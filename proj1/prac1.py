@@ -73,10 +73,7 @@ br3['number'] = np.where(br3['year']\
 
 
 br3['number'] = br3['number'].apply(pd.to_numeric)
-br3_youth = br3.query('number == 1')
-br3_youth['birth_rate'].mean()
 
-br3_non_youth = br3.query('number == 2')
-br3_non_youth['birth_rate'].mean()
-
+br3_youth_rate = br3.query('number == 1')['birth_rate'].mean()
+br3_non_youth_rate = br3.query('number == 2')['birth_rate'].mean()
 

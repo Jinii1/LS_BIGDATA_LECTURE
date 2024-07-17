@@ -54,8 +54,24 @@ br["compare22"] = np.where(br["mean22"].mean() <= br["mean22"], "large", "small"
 pd.set_option('display.max.rows', None)
 pd.set_option('display.max.columns', None)
 
-br2 = br.iloc[[0]]
-type(br2["21_2024"][0])
-type(br2)
-br2.iloc[:, 57:]
-int(df.loc[57:])
+br3 = br.iloc[[0]]
+type(br3["21_2024"][0])
+br3 = br3.iloc[:, 57:]
+
+br3 = br3.transpose()
+br3
+br3.iloc[57:,:]
+
+br3.info()
+
+
+
+br3.assign(np.where((str(i) + "_1519") == '1')
+
+br3.assign(yl =  
+)
+
+br3_youth = br3.rename(columns = {'0' : 'youth'})
+
+
+

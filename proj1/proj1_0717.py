@@ -60,3 +60,6 @@ br3.iloc[:, 57:]
 
 br3 = br3.transpose()
 br3
+br3.iloc[57:,:]
+
+np.where((str(i) + "_1519") == '1')

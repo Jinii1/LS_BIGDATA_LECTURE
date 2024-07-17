@@ -32,16 +32,3 @@ plt.clf()
 exam2['test2'] = np.where(exam2['total'] >= 200, 'A',
                  np.where(exam2['total'] >= 100, 'B', 'C'))
 exam2['test2']
-
-
-
-
-
-
-
-
-
-
-
-
-

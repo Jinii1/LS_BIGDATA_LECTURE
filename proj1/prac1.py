@@ -55,23 +55,28 @@ pd.set_option('display.max.rows', None)
 pd.set_option('display.max.columns', None)
 
 br3 = br.iloc[[0]]
-type(br3["21_2024"][0])
-br3 = br3.iloc[:, 57:]
+# type(br3["21_2024"][0]) #데이터프레임으로 나오는지 확인하기 위한 코드
+br3 = br3.iloc[:, 57:] # 20-22년도 데이터 추출
 
 br3 = br3.transpose()
 br3
-br3.iloc[57:,:]
 
 br3.info()
 
+br3 = br3.rename(columns = {0 : 'birth_rate'})
+br3 = br3.rename_axis(columns = {'' : 'year'}, index = None)
+br3
+br3 = br3.reset_index().rename(columns={'index': 'year'})
+
+br3['number'] = np.where(br3['year']\
+                  .isin(['20_2024', '20_2529', '20_3034', '21_2024', '21_2529', '21_3034', '22_2024', '22_2529', '22_3034']), '1', '2')
 
 
-br3.assign(np.where((str(i) + "_1519") == '1')
+br3['number'] = br3['number'].apply(pd.to_numeric)
+br3_youth = br3.query('number == 1')
+br3_youth['birth_rate'].mean()
 
-br3.assign(yl =  
-)
-
-br3_youth = br3.rename(columns = {'0' : 'youth'})
-
+br3_non_youth = br3.query('number == 2')
+br3_non_youth['birth_rate'].mean()
 
 

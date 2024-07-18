@@ -60,3 +60,15 @@ exam
 # 5번
 math_mean = exam.query('math not in ["-"]')['math'].mean()
 exam.loc[exam['math']=='-','math'] = math_mean
+
+# p. 185
+# Q1
+mpg = pd.read_csv('data/mpg.csv')
+mpg
+mpg.loc[[64, 123, 130, 152, 211], 'hwy'] = np.nan
+mpg[['drv', 'hwy']].isna().sum()
+
+# Q2
+mpg.dropna(subset = 'hwy') \
+    .groupby('drv') \
+    .agg(mean_hwy = ('hwy', 'mean'))

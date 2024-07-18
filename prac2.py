@@ -77,9 +77,38 @@ br3['number'] = br3['number'].apply(pd.to_numeric)
 br3_youth_rate = br3.query('number == 1')['birth_rate'].mean()
 br3_non_youth_rate = br3.query('number == 2')['birth_rate'].mean()
 
+br3_20 = br3[:7] # 20년도 데이터프레임
+br3_20
+
+br3.plot.bar(rot=0)
+
+!pip install seaborn
+import seaborn as sns
+import matplotlib.pyplot as plt
+sns.barplot(data = br3_20, x = 'year', y = 'rate')
+plt.show()
+plt.clf()
+
+
+
+# 연진
 
 
 
 
 
+
+# 연예진
+br3.groupby(['year'])
+
+br3 = br3.transpose()
+br3 = br3.rename(row={'index': 'year'})
+br3.query(')
+
+
+
+br3['new_number'] = np.where(br3['year']\
+                  .isin(['20_1519', '20_2529', '20_3034', '20_2024', '20_3539', '20_4044 ', '20_4549']), '2020')
+
+br3.groupby('year')[['birthrate[1:4]', 'birthrate[0] + birate[4:7]' ]].mean()
 

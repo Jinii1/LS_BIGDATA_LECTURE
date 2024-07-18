@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 # 두 개의 벡터를 합쳐 행렬 생성
 
@@ -112,8 +113,64 @@ my_array.shape
 
 first_slice = my_array[0, :, :]
 
+filtered_array = my_array[:, :, :-1]
+
+my_array[:, :, [0, 2]]
+my_array[:, 0, :]
+my_array[0, 1, 1:3] # [0, 1, [1, 2]]
+
+mat_x = np.arange(1, 101).reshape((5, 5, 4))
+mat_y = np.arange(1, 101).reshape((10, 5, 2)) # ((-1, 5, 2))
+
+
+
 my_array2 = np.array([my_array, my_array])
 my_array2.shape
+
+# 넘파이 배열 메서드
+a = np.array([[1, 2, 3], [4, 5, 6]])
+
+a.sum()
+a.sum(axis=0)
+a.sum(axis=1)
+
+a.mean()
+a.mean(axis=0)
+a.mean(axis=1)
+
+mat_b = np.random.randint(0, 100, 50).reshape((5, -1))
+mat_b
+
+# 행별로 가장 큰 수는?
+mat_b.max(axis=1)
+
+# 열별로 가장 큰 수는?
+mat_b.max(axis=0)
+
+a = np.array([1, 3, 2, 5])
+
+mat_b.cumsum(axis=1)
+
+a = np.array([1, 3, 2, 5])
+a.cumprod()
+
+mat_b.reshape((2, 5, 5)).flatten() # 대괄호 갯수로 차원
+
+d = np.array([1, 2, 3, 4, 5])
+d.clip(2, 4)
+
+d.tolist()
+
+
+
+
+
+
+
+
+
+
+
 
 
 

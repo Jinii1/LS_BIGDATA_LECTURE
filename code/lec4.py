@@ -198,3 +198,21 @@ vector
 vector.shape
 result = matrix + vector
 result
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

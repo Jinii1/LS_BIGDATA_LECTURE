@@ -189,7 +189,9 @@ matrix.shape
 # 1차원 배열 생성
 vector = np.array([1.0, 2.0, 3.0, 4.0])
 vector.shape # 값이 하나일 경우에 튜플로 불러올 때 (숫자,)로 되어야 함
+
 # 브로드캐스팅을 이용한 배열 덧셈
+# 길이가 다른 배열 간의 연산을 가능하게 해주는 메커니즘
 result = matrix + vector
 print("브로드캐스팅 결과:\n", result)
 

@@ -78,9 +78,11 @@ binom.pmf(4, 10, 0.36)
 
 # P(X <= 4)?
 binom.pmf(np.arange(5), n =10, p =0.36).sum()
+binom.cdf(4, 10, 0.36)
 
 # P(2 < X <= 8)?
 binom.pmf(np.arange(3,9), n=10, p=0.36).sum()
+binom.cdf(8,10,0.36) - binom.cdf(2,10,0.36)
 
 # X ~B (30, 0.2), P(X<4 or X>=25)
 # method 1 (각각 구해서 더하기)
@@ -123,6 +125,13 @@ import matplotlib.pyplot as plt
 plt.show()
 plt.clf()
 
+
+x = np.arange(31)
+prox = binom.pmf(x, n = 30, p = 0.26)
+import seaborn as sns
+sns.barplot(prox)
+plt.show()
+
 # 교재 p. 207 참고해서 코드짜기
 import pandas as pd
 x = np.arange(31)
@@ -148,12 +157,11 @@ binom.cdf(18, n = 30, p = 0.26) - binom.cdf(4, n = 30, p = 0.26)
 # P(X<=19) - P(X<=13)
 binom.cdf(19, n = 30, p = 0.26) - binom.cdf(13, n = 30, p = 0.26)
 
-#
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-x_1 = binom.rvs(n = 30, p = 0.26, size = 10)
+x_1 = binom.rvs(n = 30, p = 0.26, size = 10) # 30번 시행, 성공확률 0.26, 10개의 랜덤 샘플
 x_1
 x = np.arange(31)
 prob_x = binom.pmf(x, n = 30, p = 0.26)
@@ -191,6 +199,8 @@ binom.cdf(8, n=30, p=0.26)
 from scipy.stats import norm
 norm.pdf(0, loc = 0, scale = 1)
 # loc이 Mu, scale이 sigma
+# 확률밀도함수 (PDF): 연속형 확률 변수 ex. 사람 키처럼 연속적으로 변하는 값들이 나올 확률
+# 확률질량함수 (PMF): 이산형 확률 변수 ex. 주사위의 각 면이 나올 확률
 
 # Mu=3, sigma=4, x=5라면?
 norm.pdf(5, loc=3, scale=4)
@@ -217,14 +227,15 @@ plt.plot(k, y3, color='blue')
 plt.show()
 plt.clf()
 
-norm.cdf(0, loc=0, scale=1) # 0.5
-norm.cdf(100, loc=0, scale=1) # 1
+# 평균이 0, 표준 편차가 1인 정규 분포에서 x = 0일 때 누적 확률, 결과: 0.5
+norm.cdf(0, loc=0, scale=1) # 결과: 0.5
+norm.cdf(100, loc=0, scale=1) # 결과: 1
 
 # P(-2<X<0.54)=?
 norm.cdf(0.54, loc=0, scale=1) - norm.cdf(-2, loc=0, scale=1)
 
 # P(X<1 or X>3)=?
-1- (norm.cdf(np.arange(3), loc=0, scale=1)).sum
+1 - norm.cdf(np.arange(4), loc = 0, scale = 1).sum
 
 # 정규분포: Normal Distribution
 # X~N(3, 5^2), P(3<X<5)=? 15.54%
@@ -243,27 +254,18 @@ np.mean(x<0)
 x = norm.rvs(loc = 3,scale = 2,size = 1000)
 x
 
-sns.histplot(x)
+sns.histplot(x, stat="density")
+
+# Plot the normal distribution PDF
+from scipy.stats import norm
+
+# 정규 분포의 누적 분포 함수 값 계산
+from scipy.stats import norm
+
+xmin, xmax = (x.min(), x.max())
+x_values = np.linspace(xmin, xmax, 100)
+pdf_values = norm.pdf(x_values, loc=3, scale=2)
+plt.plot(x_values, pdf_values, color='red', linewidth=2)
+
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+plt.clf()

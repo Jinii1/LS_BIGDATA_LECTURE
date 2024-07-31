@@ -1,5 +1,6 @@
-# pd, np, plt, sns .. 등등 Shift + spacebar 
+# pd, np, plt, sns .. 등등 Shift + spacebar
 
+# 산점도
 import pandas as pd
 mpg = pd.read_csv('data/mpg.csv')
 mpg
@@ -29,26 +30,66 @@ sns.scatterplot(data = midwest, x = 'poptotal', y = 'popasian') \
    .set(xlim = [0, 500000], ylim = [0, 10000]) 
 plt.show()
 
-여기부터 다시 복습하세욥
-
 # plt.figure(figsize=(5, 4)) # 그래프 사이즈 조정
 
 # 막대그래프
 # mpg['drv'].unique() 데이터 유니크 값 찾아보기 
+# 구동 방식별 고속도로 연비 평균
 df_mpg = mpg.groupby('drv', as_index = False) \
-    .agg(mean_hwy=('hwy', 'mean')) # as_index = False -> drv가 컬럼이 돼서 나온다
+            .agg(mean_hwy=('hwy', 'mean')) # as_index = False(변수를 인덱스로 만들지 않고 유지)
 sns.barplot(data = df_mpg.sort_values('mean_hwy'),
             x = 'drv', y = 'mean_hwy',
             hue = 'drv')
 plt.show()
 
+# 크기순으로 정렬
+df_mpg = df_mpg.sort_values('mean_hwy', ascending = False)
+sns.barplot(data=df_mpg, x='drv', y='mean_hwy')
+plt.show()
+plt.clf()
+
+# 집단별 빈도표 만들기
 df_mpg = mpg.groupby('drv', as_index = False) \
             .agg(n = ('drv', 'count'))
-df_mpg
-
 sns.barplot(data = df_mpg, x = 'drv', y = 'n')
 plt.show()
-sns.countplot(data = mpg, x = 'drv', hue = 'drv')
+plt.clf()
+
+sns.countplot(data = mpg, x = 'drv', hue = 'drv', order=['4', 'f', 'r'])
+plt.show()
+plt.clf()
+
+# drv의 값을 빈도가 높은 순으로 출력
+mpg['drv'].value_counts().index
+sns.countplot(data=mpg, x='drv', order=mpg['drv'].value_counts().index)
+plt.show()
+plt.clf()
+
+plt.show()
+plt.clf()
+
+# p. 211
+# Q1
+mpg
+df = mpg.query('category=="suv"') \
+   .groupby('manufacturer', as_index=False) \
+   .agg(mean_cty=('cty', 'mean')) \
+   .sort_values('mean_cty', ascending=False) \
+   .head()
+
+sns.barplot(data=df, x='manufacturer', y='mean_cty')
+plt.show()
+plt.clf()
+
+# Q2
+df2 = mpg.groupby('category', as_index=False) \
+         .agg(n=('category', 'count')) \
+         .sort_values('n', ascending = False)
+df2
+
+sns.barplot(data=df2, x='category', y='n')
+plt.show()
+plt.clf()
 
 # 0729
 # 선 그래프 - 시간에 따라 달라지는 데이터 표현

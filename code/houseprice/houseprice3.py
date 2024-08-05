@@ -22,7 +22,7 @@ plt.clf()
 # bedroom 갯수와 saleprice 관계
 # a와 b 최적의 수 구해보기
 
-# a = 70 가정
+# a = 70
 # 방하나가 늘어나면 집값이 7천만원 늘어난다
 # b = 10
 # 방이 하나도 없어도 기본적으로 천만원
@@ -74,9 +74,9 @@ b=170
 # y: 실제 데이터 값(실제값), y_hat: 직선을 사용한 집값 (예측값)
 
 # y^hat 어떻게 구할까?
-y_hat=(a*house_df['BedroomAbvGr']+b)*1000
+y_hat=(a * house_train["BedroomAbvGr"] + b) * 1000
 # y는 어디에 있는가?
-y=house_df['SalePrice']
+y=house_train["SalePrice"]
 
 np.abs(y - y_hat)  # 절대거리
 np.sum(np.abs(y - y_hat)) # 절대값 합
@@ -190,7 +190,7 @@ print("최소값을 갖는 x 값:", result.x)
 import numpy as np
 from scipy.optimize import minimize # 최적화를 위한 함수
 
-def line_perform(par): # 주어진 파라미터 par에 대한 회귀 직선의 성능 평가
+def line_perform(par): # 주어진 파라미터 par에 대한 회귀 직선의 성능 평가, 선형회귀모델 계수&절편
     y_hat=(par[0] * house_train["BedroomAbvGr"] + par[1]) * 1000 # par[0]: 기울기, par[1]: 절편
     y=house_train["SalePrice"]
     return np.sum(np.abs((y-y_hat))) # 예측된 값과 실제 값의 차이의 절대값을 모두 더한 값을 반환, 최소 절대 오차를 계산한 것
@@ -257,7 +257,7 @@ result.x
 # houseprice 이용해서
 test_x = np.array(house_test['BedroomAbvGr']).reshape(-1, 1) 
 # 예측 집 값을 어떻게 구한담?
-pred_y=model.predict(test_x) # test 셋에 대한 집값
+pred_y=model.predict(test_x) # test 셋에 대한 예측 집 값
 pred_y
 sub_df
 sub_df['SalePrice']=pred_y*1000
@@ -377,21 +377,19 @@ house_test['GarageArea'].isna().sum()
 x = house_train[['GrLivArea', 'GarageArea']]
 y = np.array(house_train['SalePrice'])
 
-
-
-model = LinearRegression()
-model.fit(x, y) 
-model.coef_
-model.intercept_
+model = LinearRegression() # 선형회귀모델
+model.fit(x, y) # 모델 학습
+model.coef_# 기울기
+model.intercept_ # 절편
 slope = model.coef_[0]
 intercept = model.intercept_
-pred_y = model.predict(x)
+pred_y = model.predict(x) # 예측값
 ==========================================================================
 # f(x, y)=ax+by+c
-# def my_houseprice(x,y):
-#     return model.coef_[0]*x+model.coef_[1]*y+model.intercept_
+def my_houseprice(x,y):
+     return model.coef_[0]*x+model.coef_[1]*y+model.intercept_
 
-my_houseprice(300, 55)
+my_houseprice(300, 55) # 성능 함수 테스트
 
 # GrLivArea, GarageArea를 x, y에 넣어서 데이터 프레임으로 만들어서
 my_houseprice(house_test['GrLivArea'], house_test['GarageArea'])
@@ -413,31 +411,3 @@ sub_df
 # csv 파일로 내보내기
 sub_df.to_csv("./data/houseprice/sample_submission7.csv", index=False)
 ==========================================================================
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

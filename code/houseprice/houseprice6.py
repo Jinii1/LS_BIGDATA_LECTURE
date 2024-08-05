@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 import pandas as pd
 
-
 # 필요한 데이터 불러오기
 house_train=pd.read_csv("./data/houseprice/train.csv")
 house_test =  pd.read_csv('./data/houseprice/test.csv')
@@ -15,7 +14,7 @@ sub_df=pd.read_csv("./data/houseprice/sample_submission.csv")
 house_train.info()
 
 # 이상치 탐색 (그럼 이상치 두개만 빼진 house_train data 생성)
-house_train=house_train.query('GrLivArea<=4500')
+# house_train=house_train.query('GrLivArea<=4500')
 
 # 회귀분석 적합(fit)하기
 # house_train['SalePrice'] # 판다스 시리즈
@@ -83,7 +82,7 @@ sub_df=pd.read_csv("./data/houseprice/sample_submission.csv")
 house_train.info()
 
 # 이상치 탐색 (그럼 이상치 두개만 빼진 house_train data 생성)
-house_train=house_train.query('GrLivArea<=4500')
+# house_train=house_train.query('GrLivArea<=4500')
 
 # 회귀분석 적합(fit)하기
 # house_train['SalePrice'] # 판다스 시리즈
@@ -105,9 +104,9 @@ pd.reset_option('all')
 # 결측값 확인
 x.isna().sum()
 # 결측치 있는 3개의 변수에 test의 mean값을 넣기
-x['LotFrontage']=x['LotFrontage'].fillna(house_test['LotFrontage'].mean())
-x['MasVnrArea']=x['MasVnrArea'].fillna(house_test['MasVnrArea'].mean())
-x['GarageYrBlt']=x['GarageYrBlt'].fillna(house_test['GarageYrBlt'].mean())
+x['LotFrontage'].fillna(house_test['LotFrontage'].mean(), inplace=True)
+x['MasVnrArea'].fillna(house_test['MasVnrArea'].mean(), inplace=True)
+x['GarageYrBlt'].fillna(house_test['GarageYrBlt'].mean(), inplace=True)
 
 # 선형 회귀 모델 생성
 model = LinearRegression()
@@ -146,6 +145,7 @@ test_x['GarageCars'].fillna(house_test["GarageCars"].mean(), inplace=True)
 test_x['GarageArea'].fillna(house_test["GarageArea"].mean(), inplace=True)
 
 # 테스트 데이터 집값 예측
+pred_y=model.predict(test_x)
 pred_y=model.predict(test_x) # test 셋에 대한 집값
 pred_y
 
@@ -220,39 +220,3 @@ sub_df
 sub_df.to_csv("./data/houseprice/sample_submission9.csv", index=False)
 
 =======================================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -11,7 +11,7 @@ house_train=pd.read_csv("./data/houseprice/train.csv")
 house_test =  pd.read_csv('./data/houseprice/test.csv')
 sub_df=pd.read_csv("./data/houseprice/sample_submission.csv")
 
-house_train.info()
+house_train['Foundation']
 
 # 이상치 탐색 (그럼 이상치 두개만 빼진 house_train data 생성)
 # house_train=house_train.query('GrLivArea<=4500')

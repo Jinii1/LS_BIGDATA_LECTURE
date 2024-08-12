@@ -1,0 +1,118 @@
+---
+title: "팔머펭귄 대쉬보드"
+author: "Jinii"
+format: 
+  dashboard:
+    logo: "penguins-cover.png"
+    nav-buttons:
+      - icon: github
+        href: https://github.com/Jinii1/lsbigdata-project1
+---
+
+# Page 1
+
+## {.toolbar}
+
+여기는 툴바에 대한 내용이 들어갈 곳입니다.
+
+
+## 첫번째 {height=60%}
+
+```{python}
+import pandas as pd
+import numpy as np
+import plotly.express as px
+from palmerpenguins import load_penguins
+
+penguins = load_penguins()
+# penguins.head()
+
+fig = px.scatter(
+    penguins,
+    x="bill_length_mm",
+    y="bill_depth_mm",
+    color="species",
+    # trendline="ols" # p.134
+)
+fig.show()
+```
+
+## 두번째 {height=40%}
+
+### 테스트1 {.tabset}
+
+```{python}
+# ! pip install itables
+from itables import show
+show(penguins, buttons = ['copy', 'excel', 'pdf'])
+```
+
+
+::: {.card title="My Title"}
+
+카드안에 들어있는 텍스트 입니다.
+
+![팔머펭귄](penguins-cover.png)
+
+:::
+
+# Page 2
+
+```{python}
+articles = 100
+comments = 50
+spam_num = 300
+```
+
+## Row 
+
+```{python}
+#| content: valuebox
+#| title: "Articles per day"
+#| icon: pencil
+#| color: primary
+dict(
+  value = articles
+)
+```
+
+```{python}
+#| content: valuebox
+#| title: "Comments per day"
+dict(
+  icon = "chat",
+  color = "primary",
+  value = comments
+)
+```
+
+```{python}
+#| content: valuebox
+#| title: "Spam per day"
+dict(
+  icon = "airplane-engines",
+  color = "#f0330b",
+  value = spam_num
+)
+```
+
+## Row  
+
+```{python}
+import pandas as pd
+import numpy as np
+import plotly.express as px
+from palmerpenguins import load_penguins
+
+penguins = load_penguins()
+# penguins.head()
+
+fig = px.scatter(
+    penguins,
+    x="bill_length_mm",
+    y="bill_depth_mm",
+    color="species",
+    # trendline="ols" # p.134
+)
+fig.show()
+```

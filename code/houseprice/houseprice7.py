@@ -36,11 +36,13 @@ model.fit(x, y)  # 자동으로 기울기, 절편 값을 구해줌
 model.coef_      # 기울기 a
 model.intercept_ # 절편 b
 
+# train data로 학습할때 neighborhood 변수를 더미 변수로 변환해서 회귀 모델을 학습시킴
+# 동일한 변환을 test data에도 수행해야 모델이 일관되게 예측함
 neighborhood_dummies_test = pd.get_dummies(house_test['Neighborhood'],
                                   drop_first=True)
 
-test_x=pd.concat([house_test[['GrLivArea', 'GarageArea']],
-                        neighborhood_dummies_test], axis=1)
+test_x= pd.concat([house_test[["GrLivArea", "GarageArea"]], 
+                   neighborhood_dummies_test], axis=1)
 
 # 결측치 확인
 test_x["GrLivArea"].isna().sum()
@@ -56,17 +58,3 @@ sub_df
 
 # csv 파일로 내보내기
 sub_df.to_csv("./data/houseprice/sample_submission10.csv", index=False)
-
-
-특정 neighborhood 범주에 대한 지도가 나와 그거에 대한 회귀직선을 그려 그런 걸 할 수 있다
-대쉬보드에는 여러 섹션이 있다
-강남구 종로구 뭐 이런 ...
-강남구에 해당하는 지역 지도에 점을 찍을 수 있잖아?
-이 집에 해당하는 것중에 오른쪽에는 우리가 방금 그린 회귀분석을 그릴 수 있지 않을까?
-뭘 그리라는거지
-데이터 필터링을 해서 특정 지역을 눌렀을 때 그 지역의 지도랑 groudnare, 대비 price가 나오고
-price를 잘 나타내는 회귀직선을 그리고 
-탭을 
-
-대쉬보드에 탭을 마을 별로 설정할 수 있으니까 이 동네에 대한 dashboard가 나올 수 있게 만들수 있을것
-그럼 그거에 대한 동일 구조가 나올것

@@ -1,9 +1,10 @@
 ! pip install plotly
 import plotly.graph_objects as go
 import plotly.express as px
+import pandas as pd
 
 # 데이터 불러오기
-df_covid19_100=pd.read_csv('./data/df_covid19_100.csv')
+df_covid19_100=pd.read_csv('../../data/df_covid19_100.csv')
 df_covid19_100_wide=pd.read_csv('./data/df_covid19_100_wide.csv')
 df_covid19_stat=pd.read_csv('./data/df_covid19_stat.csv')
 df_covid19_100.info()
@@ -30,10 +31,10 @@ fig=go.Figure(
         'margin':margins_P
     }
     ).show() 
-fig.show()
+
 ==================================================================================
 # 프레임속성을 이용한 애니메이션
-# 애니메이션 프레임 생성
+# 시간에 따라 데이터를 추가하는 방식의 애니메이션 프레임 생성
 frames = []
 dates = df_covid19_100.loc[df_covid19_100["iso_code"] == "KOR", "date"].unique()
 
@@ -58,7 +59,6 @@ for date in dates:
         "name": str(date)
     }
     frames.append(frame_data)
-    
 
 # x축과 y축의 범위 설정
 x_range = ['2022-10-03', '2023-01-11']
@@ -110,3 +110,9 @@ fig = go.Figure(
 )
 
 fig.show()
+
+import os
+
+cwd=os.getcwd()
+
+cwd

@@ -1,6 +1,8 @@
 # ! pip install palmerpenguins
 
+! pip install palmerpenguins
 import plotly.express as px
+import plotly.graph_objects as go
 from palmerpenguins import load_penguins
 import pandas as pd
 import numpy as np
@@ -121,6 +123,7 @@ penguins_dummies = pd.get_dummies(penguins,
                                   drop_first=False)
 penguins_dummies.columns
 penguins_dummies.iloc[:,-3:]
+
 # x와 y 설정
 x = penguins_dummies[["bill_length_mm", "species_Chinstrap", "species_Gentoo"]]
 y = penguins_dummies["bill_depth_mm"]
@@ -134,13 +137,17 @@ model.intercept_
 
 regline_y=model.predict(x)
 
-plt.plot(x['bill_length_mm'], regline_y)
-plt.show()
-plt.clf()
-
+# 각각 회귀직선 그리기
+import matplotlib.pyplot as plt
 import seaborn as sns
 
-# 회귀직선 그래프 만들기
+sns.scatterplot(x=penguins["bill_length_mm"], y=y, 
+                hue=penguins["species"], palette="deep",
+                legend=False)
+sns.scatterplot(x=penguins["bill_length_mm"], y=regline_y,
+                color="black")
+plt.show()
+plt.clf()
 
 ========================================================================================
 y=ax1+bx2+c
@@ -161,26 +168,3 @@ y=model.coef[0]*x[0]+model.coef[1]*x[1]+model.coef[2]*x[2]+model.intercept_
 0.2 * 40.5 -1.93 * True -5.1* False + 10.56
 
 ========================================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

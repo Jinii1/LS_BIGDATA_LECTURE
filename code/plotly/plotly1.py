@@ -111,8 +111,6 @@ fig = go.Figure(
 
 fig.show()
 
-import os
-
-cwd=os.getcwd()
-
-cwd
+# import os
+# cwd=os.getcwd()
+# cwd

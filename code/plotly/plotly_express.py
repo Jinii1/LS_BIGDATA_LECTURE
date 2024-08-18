@@ -1,6 +1,5 @@
 # ! pip install palmerpenguins
 
-! pip install palmerpenguins
 import plotly.express as px
 import plotly.graph_objects as go
 from palmerpenguins import load_penguins

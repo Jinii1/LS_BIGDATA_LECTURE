@@ -1,5 +1,5 @@
 ---
-title: "팔머펭귄 대쉬보드"
+title: '전공별 직업 분포 확인'
 author: "Jinii"
 format: 
   dashboard:
@@ -20,13 +20,14 @@ format:
 ### 첫번째 {height=60%}
 
 ```{python}
+import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
-import plotly.express as px
-from palmerpenguins import load_penguins
+df=pd.read_csv('../../data/Common Jobs by Major.csv')
+df['Detailed Occupation'].value_counts(ascending=True)
 
-penguins = load_penguins()
-# penguins.head()
+
 
 fig = px.scatter(
     penguins,
@@ -116,3 +117,38 @@ fig = px.scatter(
 )
 fig.show()
 ```
+
+
+
+
+fig=go.figure()
+fig.add_trace(go.Bar(
+  x=CIP,
+  y=Detailed Occcupation['Other managers'],
+  name='Other managers'))
+
+fig.add_trace(go.Bar(
+  x=CIP,
+  y=Detailed Occcupation['Software developers'],
+  name='Software developers'))
+
+fig.add_trace(go.Bar(
+  x=CIP.index,
+  y=Detailed Occcupation['Physicians'],
+  name='Physicians'))
+
+fig.add_trace(go.Bar(
+  x=CIP.index,
+  y=Detailed Occcupation['Civil engineers'],
+  name='Civil engineers'))
+
+fig.add_trace(go.Bar(
+  x=CIP.index,
+  y=Detailed Occcupation['Miscellaneous engineers, including nuclear engineers'],
+  name='Miscellaneous engineers, including nuclear engineers'))
+
+fig.update_layout(barmode='group', bargroupgap=0.2,
+                  title:'전공별 직업분포 확인',
+                  title_x=0.5, margin=margins_P)
+
+fig.show()

@@ -1,0 +1,113 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: '전공별 직업 분포 확인'\n",
+        "author: \"Jinii\"\n",
+        "format: \n",
+        "  dashboard:\n",
+        "    nav-buttons:\n",
+        "      - icon: github\n",
+        "        href: https://github.com/Jinii1/lsbigdata-project1\n",
+        "---\n",
+        "\n",
+        "\n",
+        "## {.sidebar}\n"
+      ],
+      "id": "84021574"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "import plotly.graph_objects as go\n",
+        "from shiny import ui, reactive, render\n",
+        "\n",
+        "# 데이터 불러오기\n",
+        "df = pd.read_csv('../..//data/Common_Jobs_by_Major.csv')\n",
+        "\n",
+        "# 필요한 열만 선택\n",
+        "df = df[['Detailed Occupation', 'Total Population', 'ID CIP2']]\n",
+        "\n",
+        "# CIP2 코드 숫자를 한글 전공명으로 변경\n",
+        "df['ID CIP2'] = df['ID CIP2'].replace({\n",
+        "    14: '공학',\n",
+        "    19: '인문과학',\n",
+        "    27: '수학_통계',\n",
+        "    31: '공원_레크리에이션_레저',\n",
+        "    26: '생물학'\n",
+        "})\n",
+        "\n",
+        "# Detailed Occupation 변수를 한글 직업군으로 변경\n",
+        "df['Detailed Occupation'] = df['Detailed Occupation'].replace({\n",
+        "    'Other managers': '기타경영자',\n",
+        "    'Software developers': '소프트웨어개발자',\n",
+        "    'Civil engineers': '토목기사',\n",
+        "    'Miscellaneous engineers, including nuclear engineers': '기타기술자',\n",
+        "    'Physicians': '의료인'\n",
+        "})\n",
+        "\n",
+        "# 사이드바에 추가할 직업군 리스트\n",
+        "occupations = df['Detailed Occupation'].unique()\n",
+        "\n",
+        "# 사이드바 입력 정의\n",
+        "ui.input_checkbox_group(\n",
+        "    \"occupations\", \"Select Occupations:\", \n",
+        "    choices=occupations, selected=occupations\n",
+        ")"
+      ],
+      "id": "bf72f246",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@reactive.Calc\n",
+        "def filtered_data():\n",
+        "    selected_occupations = input.occupations()\n",
+        "    if not selected_occupations:\n",
+        "        return pd.DataFrame()\n",
+        "    return df[df['Detailed Occupation'].isin(selected_occupations)]\n",
+        "\n",
+        "@render.plot\n",
+        "def occupation_pie_chart():\n",
+        "    df_filtered = filtered_data()\n",
+        "    if df_filtered.empty:\n",
+        "        return go.Figure()  # 빈 데이터프레임일 경우 빈 그림 반환\n",
+        "    \n",
+        "    df_pie = df_filtered.groupby('Detailed Occupation').sum('Total Population').reset_index()\n",
+        "    \n",
+        "    fig = go.Figure()\n",
+        "\n",
+        "    fig.add_trace(go.Pie(\n",
+        "        values=df_pie['Total Population'], \n",
+        "        labels=df_pie['Detailed Occupation'],\n",
+        "        direction='clockwise', \n",
+        "        sort=True\n",
+        "    ))\n",
+        "\n",
+        "    fig.update_layout(title=dict(text=\"직업군별 인구 분포\", x=0.5))\n",
+        "    return fig"
+      ],
+      "id": "e4944491",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "C:\\DS\\Python\\Python312\\share\\jupyter\\kernels\\python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

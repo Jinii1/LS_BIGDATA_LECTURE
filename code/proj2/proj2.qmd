@@ -54,6 +54,14 @@ fig1 = px.bar(
     barmode='stack'
 )
 
+fig1.update_layout(
+    height=500,  
+    width=900,
+    showlegend=True,
+    legend=dict(traceorder='normal')
+)
+
+
 ```
 ```{python}
 #| output: false
@@ -70,6 +78,13 @@ fig2 = px.bar(
     color="Exterior_1st",
     labels={'Exterior_1st': 'Exterior', 'count_ext': 'Count'}
 )
+fig2.update_layout(
+    height=500,  
+    width=1100,
+    showlegend=True,
+    legend=dict(traceorder='normal')
+)
+
 
 ```
 

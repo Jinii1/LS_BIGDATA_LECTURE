@@ -6,6 +6,7 @@ format:
     scrolling: true
     logo: image/houseprice_logo.png
 freeze: true
+theme: flatly
 --- 
 
 # 특징

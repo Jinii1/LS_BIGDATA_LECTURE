@@ -68,6 +68,20 @@ model.fit(train_x, train_y)  # 자동으로 기울기, 절편 값을 구해줌
 y_hat=model.predict(valid_x)
 np.sqrt(np.mean((valid_y-y_hat)**2))
 
+## test 셋 결측치 채우기
+test_x["GrLivArea"].isna().sum()
+test_x["GarageArea"].isna().sum()
+test_x=test_x.fillna(house_test["GarageArea"].mean())
+
+pred_y=model.predict(test_x) # test 셋에 대한 집값
+pred_y
+
+# SalePrice 바꿔치기
+sub_df["SalePrice"] = pred_y
+sub_df
+
+# csv 파일로 내보내기
+sub_df.to_csv("./data/houseprice/sample_submission10.csv", index=False)
 
 # -> 이걸 한 이유?
 # 1. 어떤 변수를 사용하는 모델이 더 좋은지

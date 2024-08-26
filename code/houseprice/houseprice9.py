@@ -7,13 +7,11 @@ from sklearn.linear_model import LinearRegression
 # 워킹 디렉토리 설정
 import os
 cwd=os.getcwd()
-parent_dir = os.path.dirname(cwd)
-os.chdir(parent_dir)
 
 ## 필요한 데이터 불러오기
-house_train=pd.read_csv("./data/houseprice/train.csv")
-house_test=pd.read_csv("./data/houseprice/test.csv")
-sub_df=pd.read_csv("./data/houseprice/sample_submission.csv")
+house_train=pd.read_csv("../../data/houseprice/train.csv")
+house_test=pd.read_csv("../../data/houseprice/test.csv")
+sub_df=pd.read_csv("../../data/houseprice/sample_submission.csv")
 
 ## NaN 채우기
 # 각 숫치형 변수는 평균 채우기

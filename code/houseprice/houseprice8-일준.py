@@ -13,7 +13,8 @@ house_test=pd.read_csv("../../data/houseprice/test.csv")
 sub_df=pd.read_csv("../../data/houseprice/sample_submission.csv")
 
 # 트레인, 테스트 합치기(더미변수 만드는거 한 번에 처리하기 위해서 더하는거.)
-combine_df = pd.concat([house_train, house_test], ignore_index = True) # ignore_index 옵션이 있음.
+combine_df = pd.concat([house_train, house_test], ignore_index = True)
+# ignore_index 옵션이 있음.
 
 # 더미변수 만들기
 neighborhood_dummies = pd.get_dummies(
@@ -25,7 +26,8 @@ neighborhood_dummies = pd.get_dummies(
 train_dummies = neighborhood_dummies.iloc[:1460,]
 
 test_dummies = neighborhood_dummies.iloc[1460:,]
-test_dummies = test_dummies.reset_index(drop=True) # 인덱스를 초기화(house_test 원본 데이터와 맞춰야) 잘 합쳐짐
+test_dummies = test_dummies.reset_index(drop=True)
+# 인덱스를 초기화(house_test 원본 데이터와 맞춰야) 잘 합쳐짐
 
 # 원래 데이터에서 필요한 변수들만 골라서 더미데이터를 합치기.
 my_train = pd.concat([house_train[["SalePrice", "GrLivArea", "GarageArea"]],

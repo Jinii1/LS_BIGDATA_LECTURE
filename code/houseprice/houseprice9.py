@@ -13,12 +13,20 @@ house_train=pd.read_csv("../../data/houseprice/train.csv")
 house_test=pd.read_csv("../../data/houseprice/test.csv")
 sub_df=pd.read_csv("../../data/houseprice/sample_submission.csv")
 
+house_train.shape
+house_test.shape
+train_n=len(house_train)
+
+house_train.drop('Id', axis=1, inplace=True)
+house_test.drop('Id', axis=1, inplace=True)
+
 ## NaN 채우기
-# 각 숫치형 변수는 평균 채우기
+# 각 숫치형 변수는 최빈값 채우기
 # 각 범주형 변수는 Unknown 채우기
 house_train.isna().sum()
 house_test.isna().sum()
 
+# house_train 전처리
 ## 숫자형 채우기
 quantitative = house_train.select_dtypes(include = [int, float])
 quantitative.isna().sum()
@@ -37,9 +45,49 @@ for col in qual_selected:
     house_train[col].fillna("unknown", inplace=True)
 house_train[qual_selected].isna().sum()
 
-house_train.shape
-house_test.shape
-train_n=len(house_train)
+# house_test 전처리
+## 숫자형 채우기
+quantitative = house_test.select_dtypes(include = [int, float])
+quantitative.isna().sum()
+quant_selected = quantitative.columns[quantitative.isna().sum() > 0]
+
+for col in quant_selected:
+    house_test[col].fillna(house_test[col].mean(), inplace=True)
+house_test[quant_selected].isna().sum()
+
+## 범주형 채우기
+qualitative = house_test.select_dtypes(include = [object])
+qualitative.isna().sum()
+qual_selected = qualitative.columns[qualitative.isna().sum() > 0]
+
+for col in qual_selected:
+    house_test[col].fillna("unknown", inplace=True)
+house_test[qual_selected].isna().sum()
+
+# 통합 df 만들기 + 더미코딩
+df = pd.concat([house_train, house_test], ignore_index=True)
+
+# dummies
+# dummies
+df = pd.get_dummies(
+    df,
+    columns=qualitative.columns,
+    drop_first=True
+)
+df
+
+# train / test 데이터셋
+train=df.iloc[:1459,]
+
+
+
+train=df.iloc[:train_n,]
+test=df.iloc[train_n:,]
+
+
+
+# ============================
+
 
 # 통합 df 만들기 + 더미코딩
 # house_test.select_dtypes(include=[int, float])

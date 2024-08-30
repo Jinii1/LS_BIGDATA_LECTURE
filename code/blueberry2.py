@@ -92,7 +92,6 @@ model= Lasso(alpha=2.9)
 model.fit(X, y)  # 자동으로 기울기, 절편 값을 구해줌
 
 pred_y_lasso=model.predict(test_X) # test 셋에 대한 집값
-kk
 
 
 

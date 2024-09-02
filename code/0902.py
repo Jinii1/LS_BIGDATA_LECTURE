@@ -71,3 +71,6 @@ p.round(4) # p-value
 # 유의수준 0.05이라면,
 # p값이 0.05보다 작으므로, 귀무가설 기각
 # 즉, 두 변수는 독립 아니다
+# X ~ chi2(1) 일 때, P(X > 12.6)=?
+from scipy.stats import chi2
+1-chi2.cdf(12.6, df=1)

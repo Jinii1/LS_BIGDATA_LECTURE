@@ -88,26 +88,32 @@ train_y=train_df["SalePrice"]
 ## test
 test_x=test_df.drop("SalePrice", axis=1)
 
-
+# Bootstrap: 무작위로 데이터를 여러 번 복제해서 뽑아냄
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import GridSearchCV
 
-train_x.shape[0]
+train_x.shape[0] # 행: 1458
 btstrap_index1=np.random.choice(np.arange(1458), 1000, replace=True)
 bts_train_x1=train_x.iloc[btstrap_index1,:]
-bts_train_y1=np.array(train_y)[btstrap_index1]
+bts_train_y1=np.array(train_y)[btstrap_index1] # train_y:series 형식이라
 
 btstrap_index2=np.random.choice(np.arange(1458), 1458, replace=True)
 bts_train_x2=train_x.iloc[btstrap_index2,:]
 bts_train_y2=np.array(train_y)[btstrap_index2]
 
-
 model = DecisionTreeRegressor(random_state=42,
-                              max_features="sqrt")
+                              max_features="sqrt") # 모델이 분기(split)를 만들 때 고려할 특성의 수를 제한하는 데 사용
+# param_grid: hyper parameter 값의 후보들을 정의하는 딕셔너리
+# 각 하이퍼 파라미터 이름을 키로 사용, 실햄해볼 값들의 리스트를 값으로 설정
 param_grid={
-    'max_depth': np.arange(7, 20, 1),
-    'min_samples_split': np.arange(10, 30, 1)
+    'max_depth': np.arange(7, 20, 1), # 질문을 몇 단계까지 할까?
+    'min_samples_split': np.arange(10, 30, 1) # 몇 개의 데이터를 가지고 나눌까?
 }
+# max_features 주요옵션: None, sqrt, log2
+
+# GridSearchCV: hyperparameter 최적화 자동 수행
+# -> 모델의 성능을 판가름하는 hyper parameter 최적 조합 찾는 것 중요
+# 교차검증 CV를 사용해 각 조합의 성능을 평가하여 최적의 hyper parameter 찾음
 grid_search=GridSearchCV(
     estimator=model,
     param_grid=param_grid,

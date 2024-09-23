@@ -17,9 +17,9 @@ p_hat=admission_data['admit'].mean() # 합격 확률
 p_hat / (1 - p_hat) # 입학할 확률에 대한 odd
 # 오즈가 1보다 작기 때문에, 입학할 확률보다 입학하지 않을 확률이 더 큼
 
-# P(A): 0.5보다 큰 경우 -> 오즈비: 무한대에 가까워짐
-# P(A): 0.5 -> 오즈비: 1
-# P(A): 0.5보다 작은 경우 -> 오즈비: 0에 가까워짐
+# P(A): 0.5보다 큰 경우 -> 오즈: 무한대에 가까워짐
+# P(A): 0.5 -> 오즈: 1
+# P(A): 0.5보다 작은 경우 -> 오즈: 0에 가까워짐
 # 확률의 오즈비가 갖는 값의 범위: 0 ~ 무한대
 
 # 범주형 변수 rank를 사용한 오즈 계산
@@ -33,6 +33,7 @@ grouped_data['odds'] = grouped_data['p_admit'] / (1 - grouped_data['p_admit'])
 grouped_data
 # 1등급 학생들이 입학에 성공할 확률은 입학에 실패할 확률보다 18% 더 높음
 # 나머지 등급의 학생들은 입학할 확률이 입학에 실패할 확률보다 더 낮다는 것을 확인
+# 확률이 올라가면서 오즈비도 커진다
 
 # 확률이 오즈비가 3이다 P(A)?
 # P(A) / 1-P(A) -> p(A) = 3/4
@@ -59,6 +60,7 @@ grouped_data
 # 오즈값: 사건이 발생할 확률과 발생하지 않을 확률의 비율
 
 # 오즈비: 독립 변수가 1단위 증가할 때, 사건이 발생할 오즈가 얼마나 변하는지
+# x1이 한 단위 증가할 때마다 성공y의 odds 가 몇 배 증가하는지
 
 # (오즈비가 1보다 크면 해당 변수의 증가가 사건의 발생할 확률을 높이는 효과,
 # 1보다 작으면 사건이 발생할 확률을 낮추는 효과)
@@ -71,6 +73,7 @@ sns.scatterplot(data=admission_data, x='gre', y='admit')
 sns.stripplot(data=admission_data,
                 x='rank', y='admit', jitter=0.3, # 겹쳐보이는 애들 흩어지게
                 alpha=0.3) # 투명도 조절
+# rank와 admit의 관계, rank4는 합격이 희미하다
 sns.scatterplot(data=grouped_data, x='rank', y='p_admit')
 sns.regplot(data=grouped_data, x='rank', y='p_admit') # 회귀직선
 
@@ -79,7 +82,7 @@ sns.regplot(data=grouped_data, x='rank', y='p_admit') # 회귀직선
 odds_data = admission_data.groupby('rank').agg(p_admit=('admit', 'mean')).reset_index()
 odds_data['odds'] = odds_data['p_admit'] / (1 - odds_data['p_admit'])
 odds_data['log_odds'] = np.log(odds_data['odds'])
-odds_data
+odds_data # 오즈비
 
 sns.regplot(data=odds_data, x='rank', y='log_odds')
 
@@ -93,18 +96,17 @@ print(model.summary()) # intercept: 절편, rank의 coef: rank기울기
 ## 로지스틱 회귀계수 해석 아이디어
 # rank 1단위 증가하면 log odds 0.5675 감소
 # 오즈비 Odds ratio: x가 한단위 증가하면 오즈는 어떻게 변하는지?
-np.exp(0.5675) # 1.763851905037701
-# rank가 한 단위 증가할때마다 odds가 이전 오즈의 약 절반 가량 감소
+# rank 1단위 증가 -> 로그 오즈 0.5675 감소
+# np.exp(-0.5675) = 0.5675 = 오즈비
+# rank 1단위 증가 -> odds 56% 감소 경향 (x가 1단위 증가 -> odds 0.567배 되는 것)
 
 # 오즈를 이용한 확률 역산
 # p(x_rank) = exp(B0 + B1x_rank) / 1+exp(B0 + B1x_rank)
-
 
 ## Python에서 로지스틱 회귀분석 하기
 # 로지스틱 회귀분석을 통해 admit (입학 성공 여부) 예측
 import statsmodels.api as sm
 
-# admission_data['rank'] = admission_data['rank'].astype('category')
 admission_data['gender'] = admission_data['gender'].astype('category')
 # gender 변수는 범주형 변수라서 category type으로 변환해야 회귀분석 처리가 됨
 
@@ -185,6 +187,8 @@ p_hat = odds / (odds + 1)
 ## 각 계수 검정하기 with Wald test
 # 귀무가설 Bi=0 대립가설 Bi!=0
 # 유의수준 5% 하에서 gre계수가 0이라는 귀무가설을 기각할 수 있다
+
+np.exp(-0.0578)
 
 import scipy.stats as stats
 z = 0.002256 / 0.001094 # z통계량: 2.0621572212065815

@@ -1,0 +1,85 @@
+CREATE TABLE cable_test (
+	id SERIAL PRIMARY KEY,
+	diameter INTEGER NOT NULL,
+	length INTEGER NOT NULL,
+	product_type VARCHAR NOT NULL,
+	plant VARCHAR,
+	result BOOLEAN
+);
+-----------------------------------------------------------------------------------------------
+\dt
+-----------------------------------------------------------------------------------------------
+SELECT * FROM cable_test;
+-----------------------------------------------------------------------------------------------
+DROP TABLE cable_test;
+-----------------------------------------------------------------------------------------------
+INSERT INTO cable_test (diameter, length, product_type, plant, result) VALUES (241, 50020, 'A', 'P1' ,TRUE);
+-----------------------------------------------------------------------------------------------
+SELECT * FROM cable_test;
+-----------------------------------------------------------------------------------------------
+SELECT COUNT(*) FROM cable_test;
+-----------------------------------------------------------------------------------------------
+SELECT diameter, length FROM cable_test;
+-----------------------------------------------------------------------------------------------
+SELECT * FROM cable_test ORDER BY id DESC;
+-----------------------------------------------------------------------------------------------
+SELECT * FROM cable_test OFFSET 2 LIMIT 2;
+-----------------------------------------------------------------------------------------------
+SELECT DISTINCT(result) FROM cable_test;
+-----------------------------------------------------------------------------------------------
+SELECT * FROM cable_test WHERE diameter > 240;
+-----------------------------------------------------------------------------------------------
+SELECT result, AVG(length) FROM cable_test GROUP BY result;
+-----------------------------------------------------------------------------------------------
+SELECT * FROM cable_test UNION SELECT * FROM cable_test;
+SELECT * FROM cable_test UNION ALL SELECT * FROM cable_test;
+-----------------------------------------------------------------------------------------------
+CREATE EXTENSION IF NOT EXISTS tablefunc;
+-----------------------------------------------------------------------------------------------
+SELECT * FROM
+	crosstab
+	(
+		'SELECT plant, product_type, AVG(diameter) FROM cable_test GROUP BY plant, product_type ORDER BY plant, product_type'
+	)
+	AS piv_result (plant VARCHAR, "prod_type_A" NUMERIC, "prod_type_B" NUMERIC);
+------------------------------------------------------------------------------------------------
+SELECT id,
+	unnest(ARRAY['diameter', 'length']) AS condition,
+	unnest(ARRAY[diameter, length]) AS values
+	FROM cable_test;
+------------------------------------------------------------------------------------------------
+CREATE TABLE cable_plant (
+	id SERIAL,
+	plant VARCHAR NOT NULL,
+	temperature INTEGER NOT NULL
+);
+------------------------------------------------------------------------------------------------
+INSERT INTO cable_plant (plant, temperature) VALUES ('P1', 23);
+INSERT INTO cable_plant (plant, temperature) VALUES ('P2', 37);
+INSERT INTO cable_plant (plant, temperature) VALUES ('P3', 82);
+-----------------------------------------------------------------------------------------------
+SELECT * FROM cable_plant;
+-----------------------------------------------------------------------------------------------
+SELECT * FROM
+	cable_test AS a LEFT JOIN cable_plant AS b
+	ON a.plant = b.plant;
+-----------------------------------------------------------------------------------------------
+UPDATE cable_test 
+	SET diameter=0
+	WHERE id = 1;
+-----------------------------------------------------------------------------------------------
+DELETE FROM cable_test WHERE id = 1;
+-----------------------------------------------------------------------------------------------
+CREATE TABLE likes (
+	product_type VARCHAR NOT NULL,
+	likes INTEGER NOT NULL
+);
+-----------------------------------------------------------------------------------------------
+\COPY likes FROM 'C:/likes.csv' WITH CSV HEADER;
+-----------------------------------------------------------------------------------------------
+SELECT * FROM
+	cable_test AS a LEFT JOIN likes AS b
+	ON a.product_type = b.product_type;
+-----------------------------------------------------------------------------------------------
+\COPY (SELECT * FROM cable_test AS a LEFT JOIN likes AS b ON a.product_type = b.product_type) TO 'C:\Users\JSON\result.csv' WITH CSV HEADER;
+-----------------------------------------------------------------------------------------------

@@ -57,43 +57,40 @@ odds = np.exp(log_odds) # 0.03817459641135519
 p_hat = odds / (odds + 1) # 0.03677088280074742
 
 
-## 문제 6. TEMP 변수의 계수는 얼마이며, 해당 계수를 사용해서 TEMP 변수가 백혈병 치료에 대한 영향을 설명하시오.
-np.exp(-100.1734)
-# 3.13e-44 - > 0에 가까운 값입니다.
-# 체온이 1단위 상승할 때 백혈병 세포가 관측되지 않을 확률이 (오즈비만큼 변동)거의 없어지는 것을 의미
-# -> TEMP 높을수록 백혈병 세포가 관측되지 않을 확률이 매우 낮아짐
+# 문제 6. TEMP 변수의 계수는 얼마이며, 해당 계수를 사용해서 TEMP 변수가 백혈병 치료에 대한 영향을 설명하시오.
+-100.1734
+체온이 증가할수록 백혈병 치료에 부정적인 영향을 미칩니다
+체온이 1도 상승할 때마다 백혈병 세포가 관측되지 않을 가능성은 급격히 줄어들게 됩니다.
+이는 고열이 백혈병 치료 성공에 방해가 될 수 있음을 의미합니다.
 
 ## 문제 7. CELL 변수의 99% 오즈비에 대한 신뢰구간을 구하시오.
+# 99% 오즈비 신뢰구간 계산
+odds_ratios = np.exp(model.params)
+conf = model.conf_int()
+conf = np.exp(conf)
 
-# CELL 변수의 베타에 대한 99 : (베타_hat - z(0.005)*SE(std_err) , 베타_hat + z(0.005)*SE)
-from scipy.stats import norm
-z0005 = norm.ppf(0.995, loc=0, scale=1)
-30.8301 - 52.135*z0005 , 30.8301 + 52.135*z0005
-np.exp(30.8301 - 52.135*z0005) , np.exp(30.8301 + 52.135*z0005)  # (1.1683218982002717e-45, 5.141881884993857e+71)
+# CELL 변수의 신뢰 구간
+cell_confidence_interval = conf.loc['CELL']
+print(f"CELL 변수의 99% 오즈비 신뢰구간: {cell_confidence_interval}")
 
-
-## 문제 8. 주어진 데이터에 대하여 로지스틱 회귀 모델의 예측 확률을 구한 후
-# 50% 이상인 경우 1로 처리하여, 혼동 행렬를 구하시오.
-
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-import matplotlib.pyplot as plt
-
-y_pred = model.predict(train)
-result = pd.DataFrame({'y_pred' : y_pred})
-result['result'] = np.where(result['y_pred']>=0.5, 1,0)
-
-conf_mat = confusion_matrix(y_true = df['REMISS'], y_pred = result['result'], labels=[1,0])
-p = ConfusionMatrixDisplay(confusion_matrix = conf_mat, display_labels = ('관측불가_1', '관측가능_0'))
-plt.rcParams['font.family'] = 'Malgun Gothic'
-p.plot(cmap="Blues")
+#CELL 변수의 99% 오즈비 신뢰구간: 
+#0    1.027206e-31
+#1    5.847804e+57
 
 
-## 문제 9. 해당 모델의 Accuracy는 얼마인가요?
 
-(5+15)/(5+3+4+15)  # 0.7407407407407407
 
-from sklearn.metrics import accuracy_score, f1_score
-accuracy_score(df['REMISS'], result['result'])  # 0.7407407407407407
+문제 8. 주어진 데이터에 대하여 로지스틱 회귀 모델의 예측 확률을 구한 후, 50% 이상인 경우 1로 처리하여, 혼동 행렬를 구하시오.
+pred_probs = model.predict(X)
+predictions = (pred_probs >= 0.5).astype(int)
+
+# 혼동 행렬
+conf_matrix = confusion_matrix(y, predictions)
+
+
+
+문제 9. 해당 모델의 Accuracy는 얼마인가요?
+accuracy = accuracy_score(y, predictions)
 
 
 ## 문제 10. 해당 모델의 F1 Score를 구하세요.

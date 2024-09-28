@@ -2,11 +2,11 @@
 10 * 18 ** 2 + 2*11
 14 % 3 # 14를 3으로 나눈 나머지
 14 // 3 # 14를 3으로 나눈 몫
+# -----------------------------------------------------------------------
 
 ## 02-2 문자열 자료형
 # 여러 줄인 문자열을 변수에 대입하고 싶을 때
-multiline = '''
-Life is too short
+multiline = ''' Life is too short
 You need python
 '''
 print(multiline)
@@ -25,6 +25,7 @@ len(a)
 # 슬라이싱: 잘라낸다
 a = 'Life is too short, You need Python'
 a[4]
+
 a[0:4] # 0<=a<4
 # 슬라이싱 기법으로 a[시작 번호:끝 번호]를 지정할 때 끝 번호에 해당하는 문자는 포함 x
 
@@ -41,9 +42,10 @@ day='three'
 
 '%10s' % 'hi'
 '%-10s' % 'hi'
+
 # format 함수를 사용한 포매팅
 'I eat {0} apples'.format('five')
-'I ate {number} apples. So I was sick for {day} days' .format(number=10, day=3)
+'I ate {number} apples. So I was sick for {day} days'.format(number=10, day=3)
 
 '{0:<10}'.format('hi') # 치환되는 문자열을 왼쪽으로 정렬하고 문자열의 총 자릿수를 10으로
 '{0:>10}'.format('hi')
@@ -98,6 +100,7 @@ a = 'Life is too short'
 a.split()
 b='a:b:c:d'
 b.split(':')
+# -----------------------------------------------------------------------
 
 ## 02-3 리스트 자료형
 odd = [1, 3, 5, 7, 9]
@@ -204,6 +207,7 @@ a.count(1)
 a=[1,2,3]
 a.extend([4,5])
 a
+# -----------------------------------------------------------------------
 
 ## 02-4 튜플 자료형
 # 리스트는 [], 튜플은 ()
@@ -231,3 +235,43 @@ t4=t2*2
 t1=(1,2,3)
 t2=(4,)
 t1+t2
+# -----------------------------------------------------------------------
+
+## 02-5 딕셔너리 자료형
+# key를 통해 value를 얻는
+dic = {'name': 'Jinii', 'phone': '010-3050-7651', 'birth': '0904'}
+a = {'a': [1,2,3]}
+
+a = {1: 'a'}
+a[2] = 'b'
+a
+
+del a[1]
+
+# ex. 4명의 사람의 각자 특기를 표현할 수 있는 가장 좋은 방법
+
+grade={'pey': 10, 'julliet': 99}
+grade['julliet'] # 딕셔너리변수이름[Key]
+
+# key는 고유한 값으로 중복x, 변하지 않는 값을 사용 (tuple 가능, list 불가능)
+
+dic = {'name': 'Jinii', 'phone': '010-3050-7651', 'birth': '0904'}
+dic.keys()
+
+dic['name']
+dic.get('name')
+
+for k in dic.keys():
+            print(k)
+
+# key, value 쌍 얻기 - items
+dic.items()
+# key, value 쌍 모두 지우기 - clear
+dic.clear()
+
+'name' in dic
+
+dic = {'name':'홍길동', 'birth': 1128, 'age': 30}
+# -----------------------------------------------------------------------
+
+## 02-6 집합 자료형

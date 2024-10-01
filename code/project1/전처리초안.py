@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from statsmodels.stats.outliers_influence import variance_inflation_factor
-import pandas as pd
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -21,7 +21,6 @@ data.head()
 
 # Y 변수 (타겟 변수) 분포 확인
 target_dist = data['Y'].value_counts()
-
 
 # 2. 고윳값(단일값) 횟수 출력
 data.nunique() # -> x4랑 x13이 값이 하나임을 확인
@@ -69,7 +68,231 @@ for col in data.columns:
     plt.title(f'Boxplot of {col}')
     plt.show()
 
+# 시각화를 보고 이상치 몇 개를 날릴지 기준을 나누기 0.1% 0.2% .. 날려보고 성능 평가 (XGB, Light)
+# 0부터 1까지 0.1로 해서 이상치 날리는 조건을 하나 설정
 
+# 대웅오빠코드 (이상치 조건)
+# X4와 X13 제거 (단일값)
+
+# 이상치 비율 리스트 (0.1% ~ 1.0%)
+outlier_percents = np.arange(0.001, 0.011, 0.001)
+
+# 결과 저장을 위한 딕셔너리
+outliers_detected = {}
+
+# 이상치 탐지 및 박스플롯 그리기
+for percent in outlier_percents:
+    print(f"\n이상치 비율 기준: {percent*100}%")
+    
+    # 상위 percent 이상치를 탐지하는 기준 설정
+    upper_bound = data.quantile(1 - percent)
+    lower_bound = data.quantile(percent)
+    
+    # 이상치 탐지 (상위, 하위 percent에 해당하는 이상치)
+    is_outlier = (data < lower_bound) | (data > upper_bound)
+    outliers_count = is_outlier.sum()
+    
+    # 이상치 탐지 결과 저장
+    outliers_detected[percent] = outliers_count
+    
+    # 결과 출력
+    print(f"각 변수에서 탐지된 이상치 개수 ({percent*100}% 기준):")
+    print(outliers_count)
+    
+    # 박스플롯 그리기
+    data.plot(kind='box', subplots=True, layout=(5, 5), figsize=(20, 15), sharex=False, sharey=False)
+    plt.suptitle(f"Boxplot for {percent*100}% Outlier Removal", size=16)
+    plt.show()
+
+# 최종 결과 출력 (모든 이상치 탐지 결과)
+for percent, counts in outliers_detected.items():
+    print(f"\n{percent*100}% 이상치 기준:")
+    print(counts)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ----------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import roc_auc_score
+import xgboost as xgb
+
+# 데이터 로드 및 전처리
+data = pd.read_csv('../../bigfile/1주_실습데이터.csv')
+
+# 변수 제거 (단일 값 및 동일한 값을 가진 변수 제거)
+data = data.drop(columns=['X4', 'X13', 'X6', 'X8', 'X12'])
+
+# X와 Y 분리
+X = data.drop(columns=['Y'])
+y = data['Y']
+
+# 정규화 함수 정의 (MinMaxScaler 사용)
+def normalize_data(X):
+    scaler = MinMaxScaler()
+    X_scaled = scaler.fit_transform(X)
+    return pd.DataFrame(X_scaled, columns=X.columns)
+
+# 이상치 제거 및 모델 학습 함수 정의
+def train_xgboost_with_outlier_removal(X, y, percent):
+    # 상위, 하위 percent 이상치 탐지
+    upper_bound = X.quantile(1 - percent)
+    lower_bound = X.quantile(percent)
+    
+    # 이상치 제거
+    is_outlier = (X < lower_bound) | (X > upper_bound)
+    outliers_idx = is_outlier.any(axis=1)
+    X_clean = X[~outliers_idx]
+    y_clean = y[~outliers_idx]
+    
+    # 데이터 정규화
+    X_clean_normalized = normalize_data(X_clean)
+    
+    # Train/Test split
+    X_train, X_test, y_train, y_test = train_test_split(X_clean_normalized, y_clean, test_size=0.2, random_state=42)
+    
+    # XGBoost 모델 학습
+    model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+    model.fit(X_train, y_train)
+    
+    # 예측 및 성능 평가 (AUROC)
+    y_prob = model.predict_proba(X_test)[:, 1]
+    auroc = roc_auc_score(y_test, y_prob)
+    
+    print(f"이상치 {percent*100}% 제거 후 AUROC: {auroc:.4f}")
+    return auroc
+
+# 이상치 비율 리스트 (0.1% ~ 1.0%)
+outlier_percents = np.arange(0.001, 0.011, 0.001)
+
+# 결과 저장을 위한 딕셔너리
+results = {}
+
+# 이상치 제거 후 XGBoost 모델 학습 및 평가
+for percent in outlier_percents:
+    print(f"\n이상치 비율 기준: {percent*100}%")
+    auroc = train_xgboost_with_outlier_removal(X, y, percent)
+    results[percent] = auroc
+
+# 최종 결과 출력
+for percent, auroc in results.items():
+    print(f"\n{percent*100}% 이상치 제거 후 AUROC: {auroc:.4f}")
+
+
+
+
+# ----------------------------------------------------
+import lightgbm as lgb
+import xgboost as xgb
+from sklearn.metrics import roc_auc_score
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
+import numpy as np
+import pandas as pd
+
+# LightGBM 모델 학습 및 평가 함수 정의
+def train_lightgbm(X_train, X_test, y_train, y_test):
+    model = lgb.LGBMClassifier(random_state=42)
+    model.fit(X_train, y_train)
+    y_prob = model.predict_proba(X_test)[:, 1]
+    auroc = roc_auc_score(y_test, y_prob)
+    return auroc
+
+# XGBoost 모델 학습 및 평가 함수 정의
+def train_xgboost(X_train, X_test, y_train, y_test):
+    model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+    model.fit(X_train, y_train)
+    y_prob = model.predict_proba(X_test)[:, 1]
+    auroc = roc_auc_score(y_test, y_prob)
+    return auroc
+
+# 데이터 정규화 함수
+def normalize_data(X):
+    scaler = MinMaxScaler()
+    X_scaled = scaler.fit_transform(X)
+    return pd.DataFrame(X_scaled, columns=X.columns)
+
+# 이상치 제거 및 두 모델 비교 함수
+def compare_models(X, y, percent):
+    # 상위, 하위 percent 이상치 탐지
+    upper_bound = X.quantile(1 - percent)
+    lower_bound = X.quantile(percent)
+    
+    # 이상치 제거
+    is_outlier = (X < lower_bound) | (X > upper_bound)
+    outliers_idx = is_outlier.any(axis=1)
+    X_clean = X[~outliers_idx]
+    y_clean = y[~outliers_idx]
+    
+    # 데이터 정규화
+    X_clean_normalized = normalize_data(X_clean)
+    
+    # Train/Test split
+    X_train, X_test, y_train, y_test = train_test_split(X_clean_normalized, y_clean, test_size=0.2, random_state=42)
+    
+    # 두 모델의 AUROC 비교
+    auroc_lightgbm = train_lightgbm(X_train, X_test, y_train, y_test)
+    auroc_xgboost = train_xgboost(X_train, X_test, y_train, y_test)
+    
+    return auroc_lightgbm, auroc_xgboost
+
+# 이상치 비율 리스트 (0.1% ~ 1.0%)
+outlier_percents = np.arange(0.001, 0.011, 0.001)
+
+# 결과 저장을 위한 딕셔너리
+comparison_results = {}
+
+# 이상치 제거 후 LightGBM과 XGBoost 모델 학습 및 평가
+for percent in outlier_percents:
+    print(f"\n이상치 비율 기준: {percent*100}%")
+    auroc_lightgbm, auroc_xgboost = compare_models(X, y, percent)
+    comparison_results[percent] = {'LightGBM': auroc_lightgbm, 'XGBoost': auroc_xgboost}
+    print(f"LightGBM AUROC: {auroc_lightgbm:.4f}, XGBoost AUROC: {auroc_xgboost:.4f}")
+
+# 최종 결과 출력
+for percent, result in comparison_results.items():
+    print(f"\n{percent*100}% 이상치 제거 후:")
+    print(f"LightGBM AUROC: {result['LightGBM']:.4f}, XGBoost AUROC: {result['XGBoost']:.4f}")
+# ----------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# --------------------------------------
 # 5. 고유값 개수를 기준으로 숫자형인지 범주형인지 추측
 # 각 변수가 범주형인지 숫자형인지 분류하고 그에 맞는 전처리 방법 적용 가능
 
@@ -97,6 +320,10 @@ print(f"숫자형으로 추정되는 변수: {numerical_columns}")
 
 # 하지만 고유값 10개를 기준으로 했을 때는 y만 범주형이고 x 변수들은 모두 숫자형으로 나옴
 
+# 데이터 수가 엄청 많은데 범주형인지 아닌지 판단할 기준을 어떻게 세우는지?
+# Categorical로 변환해서
+
+data['X9']
 
 ## 6. 히스토그램
 # 범주형 변수 시각화 (막대그래프)
@@ -105,6 +332,10 @@ for col in categorical_columns:
     sns.countplot(x=data[col])
     plt.title(f'Countplot of {col}')
     plt.show()
+
+# y클래스 불균형 문제로 인해 모델이 주로 **합격(0)**으로 예측하는 경향이 있을 수 있다
+# 이 상황에서는 샘플링을 고려 (시간부족이슈 ,, ^^ 하지마)
+# -> oversampling/ random하게 뽑는 등 방법 2~3개 정도 해보기
 
 # 숫자형 변수 시각화 (히스토그램)
 plt.figure(figsize=(12, len(numerical_columns) * 3))
@@ -204,9 +435,9 @@ sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidt
 plt.title('Correlation Heatmap')
 plt.show()
 
-불량이 있고 합격이 있다면 상관관계를 잘 보여주는 변수라면 양쪽에 모여있을것
-산점도를 찍으면 그걸 알 수 있으니까 중요한 변수겠거니 설명해주고
-변수를 추려서 모델 학습 시작 ~!
+# 불량이 있고 합격이 있다면 상관관계를 잘 보여주는 변수라면 양쪽에 모여있을것
+# 산점도를 찍으면 그걸 알 수 있으니까 중요한 변수겠거니 설명해주고
+# 변수를 추려서 모델 학습 시작 ~!
 
 # 샘플링된 데이터로 상관관계 분석
 correlation_matrix_sampled = sampled_data.corr()
